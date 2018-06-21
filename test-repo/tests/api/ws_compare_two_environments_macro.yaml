@@ -1,0 +1,36 @@
+description: |
+  Verify that the API returns the correct data
+dataSet: $data("ws.csv")  
+actors:
+  - actor: API
+    segments:
+      - segment: 1
+        actions:
+            - description: Call the $dataRecord.verb $dataRecord.ws API
+              macro: api.ws_macro
+              args:
+                url: $format($data("config").url.base,$dataRecord.ws,$dataRecord.params)
+                verb: $dataRecord.verb
+                description: Call the $dataRecord.verb $dataRecord.ws API
+            - description: Verify that API Data was returned correctly and is not empty for $dataRecord.ws
+              script: |
+                var actualStatusCode = ""+$localData.status;
+                var APIActualResult =  $json($localData.items);
+            - description: Call the $data("config").url.secondary $dataRecord.verb $dataRecord.ws API
+              macro: api.ws_macro
+              args:
+                url: $format($data("config").url.secondary,$dataRecord.ws,$dataRecord.params)
+                verb: $dataRecord.verb
+                description: Call the $data("config").url.secondary $dataRecord.verb $dataRecord.ws API
+            - description: Verify that API Data was returned correctly and is not empty for $dataRecord.ws
+              script: |
+                $include("underscore.js");
+                var expectedStatusCode = ""+$localData.status;
+                var APIExpectedResult =  $json($localData.items);
+                $log("APIActualResult"+  typeof APIActualResult + "  APIExpectedResult"+  APIExpectedResult);
+                $log(actualStatusCode+"*********************************************************************"+ expectedStatusCode);
+                if(_.isEqual(actualStatusCode, expectedStatusCode) && _.isEqual(APIActualResult, APIExpectedResult)){
+                    $log("The API response is equal to the expacted response. Testcase is successful");
+                } else {
+                    $fail("Response body invalid. Testcase is failed");
+                }

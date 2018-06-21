@@ -1,0 +1,14 @@
+description: Verify that the Web returns the correct data
+dataSet: $data("web.csv")  
+actors:
+  - actor: WEB
+    segments:
+      - segment: 1
+        actions:
+          - description: Call the Login screen
+            macro: web.web_login_macro
+            args:
+              url: $data("config").url.webbase
+              uname: $dataRecord.uid
+              country: $dataRecord.country
+              roleId: $dataRecord.roleId

@@ -1,0 +1,43 @@
+description: |
+  Verify that the API returns the correct data
+dataSet: $data("ws.csv")  
+actors:
+  - actor: API
+    segments:
+      - segment: 1
+        actions:
+          - description: Call the $data("config").url.base $dataRecord.verb $dataRecord.ws API
+            action: org.getopentest.actions.HttpRequest
+            args:
+              url: $format($data("config").url.base,$dataRecord.ws,$dataRecord.params)
+              verb: $dataRecord.verb
+              $localData:
+                items: $output.body
+                status: $output.statusCode
+                headers: $output.headers
+                duration: $output.durationMs
+          - description: Call the $data("config").url.secondary $dataRecord.verb $dataRecord.ws API
+            action: org.getopentest.actions.HttpRequest
+            args:
+              url: $format($data("config").url.secondary,$dataRecord.ws,$dataRecord.params)
+              verb: $dataRecord.verb
+              $localData:
+                items1: $output.body
+                status1: $output.statusCode
+                headers1: $output.headers
+                duration1: $output.durationMs
+          - description: Verify that API Data was returned correctly and is not empty for $dataRecord.ws
+            script: |
+              $include("underscore.js");
+              var actualStatusCode = ""+$localData.status;
+              var expectedStatusCode = ""+$localData.status1;
+              var APIActualResult =  $json($localData.items);
+              var APIExpectedResult =  $json($localData.items1);
+              $log("APIActualResult"+  $json(APIActualResult)+ "APIExpectedResult"+  $json(APIExpectedResult));
+              $log("APIActualResult"+  typeof APIActualResult + "  APIExpectedResult"+  APIExpectedResult);
+              $log(actualStatusCode+"*********************************************************************"+ expectedStatusCode);
+              if(_.isEqual(actualStatusCode, expectedStatusCode) && _.isEqual(APIActualResult, APIExpectedResult)){
+                  $log("The API response is equal to the expacted response. Testcase is successful");
+              } else {
+                  $fail("Response body invalid. Testcase is failed");
+              }

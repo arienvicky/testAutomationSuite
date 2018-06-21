@@ -1,0 +1,56 @@
+actions:
+- action: org.getopentest.selenium.NavigateTo
+  args:
+    url: $macroArgs.url
+  description: Navigate to the console admin screen
+- action: org.getopentest.selenium.SendKeys
+  args:
+    locator: $data("locator").loginPage.loginTxt
+    text: $macroArgs.uname
+  description: Type the user id
+- action: org.getopentest.selenium.Click
+  args:
+    locator: $data("locator").loginPage.loginBtn
+  description: click login
+- description: Read the product description
+  action: org.getopentest.selenium.ReadElementText
+  args:
+    locator: $data("locator").welcomePage.welcomeLocator
+    $localData:
+        description: $output.text
+- description: Log the page header
+  script: |
+    $log("The page header is " + $localData("description"));
+     if("Welcome" === $localData("description")){
+                  $log("Page header validated successfully. Testcase is successful");
+              } else {
+                  $fail("Response body invalid. Testcase is failed");
+              }
+- action: org.getopentest.selenium.SelectListOption
+  args:
+    locator: $data("locator").welcomePage.countryLocator
+    optionValue: $macroArgs.country
+  description: Type the country
+- action: org.getopentest.selenium.SelectListOption
+  args:
+    locator: $data("locator").welcomePage.roleIdLocator
+    optionValue: $macroArgs.roleId
+  description: Type the role id
+- action: org.getopentest.selenium.Click
+  args:
+    locator: $data("locator").welcomePage.continueBtnLocator
+  description: click continue
+- description: Read the product description
+  action: org.getopentest.selenium.ReadElementText
+  args:
+    locator: $data("locator").dashboardPage.dashboardHeaderLocator
+    $localData:
+        description: $output.text
+- description: Log the page header
+  script: |
+    $log("The page header is " + $localData("description"));
+     if("Digital DashBoard" === $localData("description")){
+                  $log("Page header validated successfully. Testcase is successful");
+              } else {
+                  $fail("Response body invalid. Testcase is failed");
+              }

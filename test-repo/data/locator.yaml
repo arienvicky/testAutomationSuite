@@ -1,0 +1,17 @@
+loginPage:
+  loginTxt:
+    name: j_idt14
+  loginBtn:
+    name: j_idt16
+welcomePage:
+  welcomeLocator:
+    {css: ".page_heading"}
+  countryLocator:
+    id: countryId
+  roleIdLocator:
+    id: roleId
+  continueBtnLocator:
+    id: loginUser
+dashboardPage:
+  dashboardHeaderLocator:
+    {css: ".page_heading"}

@@ -1,0 +1,31 @@
+description: |
+  Verify that the API returns the correct data
+dataSet: $data("ws.csv")  
+actors:
+  - actor: API
+    segments:
+      - segment: 1
+        actions:
+          - description: Call the $dataRecord.verb $dataRecord.ws API
+            action: org.getopentest.actions.HttpRequest
+            args:
+              url: $format($data("config").url.base,$dataRecord.ws,$dataRecord.params)
+              verb: $dataRecord.verb
+              $localData:
+                items: $output.body
+                status: $output.statusCode
+                headers: $output.headers
+                duration: $output.durationMs
+          - description: Verify that API Data was returned correctly and is not empty for $dataRecord.ws
+            script: |
+              $include(["underscore.js", $dataRecord.responsejs]);
+              var actualStatusCode = ""+$localData.status;
+              var expectedStatusCode = $dataRecord.statuscode;
+              var APIActualResult = $localData.items;
+              var APIExpectedResult = wsResponse($dataRecord.response);
+              $log("APIExpectedResult"+  $json(APIExpectedResult));
+              if(_.isEqual(actualStatusCode, expectedStatusCode) && _.isEqual(APIActualResult, APIExpectedResult)){
+                  $log("The API response is equal to the expacted response. Testcase is successful");
+              } else {
+                  $fail("Response body invalid. Testcase is failed");
+              }

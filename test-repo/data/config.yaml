@@ -1,0 +1,4 @@
+url:
+  base: "http://localhost:8080/myapp/{0}?{1}"
+  secondary: "http://dev.com/myapp/{0}?{1}"
+  webbase: "http://localhost:8080/myapp"

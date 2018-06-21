@@ -1,0 +1,36 @@
+description: |
+  Verify that the API returns the correct data
+dataSet: $data("ws.csv")  
+actors:
+  - actor: API
+    segments:
+      - segment: 1
+        actions:
+          - description: Call the $dataRecord.verb $dataRecord.ws API
+            action: org.getopentest.actions.HttpRequest
+            args:
+              url: $format($data("config").url.base,$dataRecord.ws,$dataRecord.params)
+              verb: $dataRecord.verb
+              $localData:
+                items: $output.body
+                status: $output.statusCode
+                headers: $output.headers
+                duration: $output.durationMs
+          - description: Verify that API Data was returned correctly and is not empty for $dataRecord.ws
+            script: |
+              $include("underscore.js");
+              var actualStatusCode = ""+$localData.status;
+              var expectedStatusCode = $dataRecord.statuscode;
+              if(_.isEqual(actualStatusCode, expectedStatusCode)){
+                  $log("The API response is equal to the expacted response. Testcase is successful");
+                   var FileWriter = Java.type("java.io.FileWriter");
+                   var BufferedWriter = Java.type("java.io.BufferedWriter");
+                   var File = Java.type("java.io.File");
+                   var fw=new FileWriter(new File("/Users/vikbawej/MCD_Stash/dnatest/test-repo/scripts/"+$dataRecord.responsejs), true);
+                   var bw= new BufferedWriter(fw);    
+                   bw.write("var "+$dataRecord.response+"= "+$json($localData.items)); 
+                   bw.close();   
+                   fw.close();    
+              } else {
+                  $fail("Response body invalid. Testcase is failed");
+              }

@@ -1,0 +1,60 @@
+# A string that specifies the type of actor that will be created. This
+# can be any string - as long as the same string is going to be used in
+# the test definition files - but it's recommended to use an uppercase
+# three-leter string (e.g. WEB, MOB, API, etc.)
+actorType: API
+
+# Actor tags can be used to determine what test actor will execute a particular
+# test session when mutiple actors of the required type are available.
+# actorTags: [ chrome ]
+
+# Possible values are: TRACE, DEBUG, INFO, WARN and ERROR
+logLevel: TRACE
+
+# The URL to the sync server
+syncServerUrl: "http://localhost:3001"
+
+# Selenium options
+selenium:
+    # seleniumServerUrl: http://127.0.0.1:9515
+    desiredCapabilities:
+        browserName: chrome
+        chromeOptions:
+            args: [ --start-maximized ]
+            # binary: C:/Program Files/Opera/50.0.2762.67/opera.exe
+    chromeDriverExePath: /Users/vikbawej/Downloads/chromedriver
+    edgeDriverExePath:
+    firefoxDriverExePath: C:/Selenium/geckodriver.exe
+    ieDriverExePath:
+    operaDriverExePath: C:/Selenium/operadriver.exe
+    safariDriverExePath:
+    systemProperties:
+        # property1: value1
+    maximizeWindow: true
+    scriptTimeout: 20
+    # Instructs the test actor to reuse the same browser window every time a
+    # test is run. This can be very beneficial during test development, but is
+    # likely not wise to keep enabled in production.
+    reuseDriver: false
+
+# Appium options (only used for mobile testing)
+appium:
+    appiumServerUrl: http://127.0.0.1:4723/wd/hub
+    desiredCapabilities:
+        platformName: Android
+        app: application.apk
+    implicitWaitSec: 0
+    # Instructs the test actor to reuse the same app instance every time a
+    # test is run. This can be very beneficial during test development, but is
+    # likely not wise to keep enabled in production.
+    reuseDriver: false
+
+# Options for API testing (HttpRequest action)
+api:
+    # Allows the HTTP client to ignore the web server certificate. Useful for
+    # working with servers that are using self-signed certificates.
+    ignoreCert: false
+    # The HTTP proxy server to use when doing API testing using the the HttpRequest
+    # action. This is useful when behind a firewall, or for capturing the outbound
+    # HTTP requests with tools like Fiddler or Charles.
+    # httpProxy: localhost:8888

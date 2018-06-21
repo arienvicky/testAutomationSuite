@@ -1,0 +1,11 @@
+actions:
+  - description: $macroArgs.description
+    action: org.getopentest.actions.HttpRequest
+    args:
+      url: $macroArgs.url
+      verb: $macroArgs.verb
+      $localData:
+         items: $output.body
+         status: $output.statusCode
+         headers: $output.headers
+         duration: $output.durationMs
